@@ -1,0 +1,13 @@
+{
+  "name": "ozgur-marketplace",
+  "owner": {
+    "name": "Ozgur"
+  },
+  "plugins": [
+    {
+      "name": "agent-kit",
+      "source": "./",
+      "description": "Context-isolated agent team for multi-project work."
+    }
+  ]
+}
