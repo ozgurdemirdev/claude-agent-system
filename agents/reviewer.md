@@ -36,6 +36,28 @@ You verify a change. You do not fix it - fixes are dispatched back to coder.
 - Do not review files outside the change unless a caller is broken by it.
 - Rank by severity. Three real findings beat twelve padded ones.
 
+## Findings output
+
+When reviewing a project that tracks work in its own issue tracker or task
+board, record each finding there per that project's own convention.
+
+When reviewing a project with device or screenshot flows and
+`tool/loop/findings.sh` present, append each finding to its ledger:
+
+```
+bash tool/loop/findings.sh append <<'JSON'
+{"flow":"...","step":"...","status":"open","severity":"critical|major|minor","likelihood":"high|low","layer":"ui|dto|mapper|backend|unknown","device":"...","expected":"...","actual":"...","screenshot":"...","log":"...","source":"reviewer","packet":"..."}
+JSON
+```
+
+- `likelihood` by screen, same rule as device-runner: signup, match/swipe,
+  messages, payment/VIP → `high`; everything else → `low`.
+- `severity` by the same proxy where applicable: a logic bug that would
+  crash → `critical`; wrong behaviour → `major`; style/naming → `minor`.
+
+The prose `FINDINGS` section below keeps only P1 (blocker) items. Store all
+other findings in the project's applicable panel or ledger finding store.
+
 ## Progress log
 
 Append to `.claude/state/progress.jsonl` in the project root. One JSON object
@@ -52,16 +74,19 @@ when you finish.
 
 ## Output contract
 
-Max 35 lines and 450 words, whichever you reach first. A finding that needs a
-paragraph is two findings or an over-explained one - compress it. No preamble.
+When reporting, use at most 37 lines and 450 words, whichever limit arrives
+first. When a finding grows to a paragraph, split it or compress it. Start
+directly with the fields below.
 
 ```
 VERDICT: pass|fail
 TESTS: <pass/fail counts, or "not run - why">
 
-FINDINGS (severity order):
-  [blocker|major|minor] <path:line> - <what breaks, and when>
+FINDINGS (P1/blocker only; store the rest in the applicable finding store):
+  [blocker] <path:line> - <what breaks, and when>
   ...
 
 QUESTIONS: <things you suspect but could not prove, or "-">
+TRIED: <one sentence: what this attempt did>
+FAILED_BECAUSE: <one sentence, or "-" when nothing failed>
 ```

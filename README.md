@@ -4,6 +4,14 @@ A context-isolated agent team for Claude Code. Each agent runs in its own
 context window and returns a distilled report, so research and implementation
 never fill the main session.
 
+> **Dikkat: ajan görevleri ve model ataması 100$'lık (Max) plana göre
+> tasarlanmıştır.** 20$'lık (Pro) planda kullanıyorsanız `planner` ve
+> `reviewer`'ı Opus olarak bırakmayın, tüm ajanları Sonnet'e çekin. Her alt
+> ajan ayrı bir model çağrısı demektir; bu sistem tek oturumluk kullanıma göre
+> çok daha hızlı limit tüketir. Token/model giderlerini ve kendi kullanım
+> planınızla uyumunu bilmiyorsanız, kurmadan önce Claude'a bu sistemin
+> projenize göre gider/hız etkisini sorun.
+
 ## The team
 
 | Agent | Model / effort | Writes? | Use for |
@@ -67,9 +75,9 @@ order (the junctions above are step 2):
    and reporting rules. Without this block the agents exist but nothing
    routes to them; with it, routing works in every project automatically.
 
-A project that already carries a committed `CLAUDE.md` (like Zest) needs
-nothing else — clone it and the agents inherit its conventions. Only a brand
-new project needs `/kurulum` (below).
+A project that already carries a committed `CLAUDE.md` needs nothing else:
+clone it and the agents inherit its conventions. Only a brand new project
+needs `/kurulum` (below).
 
 ## Project layout
 
@@ -97,7 +105,9 @@ conventions actually in use and writes `CLAUDE.md` from them. In an empty
 project, it asks the few questions it cannot infer. Pass a hint to skip the
 guessing: `/kurulum Flutter, Riverpod, Dio`.
 
-It refuses to overwrite an existing `CLAUDE.md` without asking.
+It never overwrites a `CLAUDE.md` that already exists. It reads it first,
+reports what it already covers and what's missing, and stops there until you
+tell it to continue.
 
 `templates/project-conventions.md` is the section list it fills in. Edit that
 template to change what every project's `CLAUDE.md` covers.

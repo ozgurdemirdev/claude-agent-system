@@ -1,7 +1,7 @@
 ---
 name: coder
 description: Use to implement ONE well-scoped task with an explicit file list, produced by planner. Writes the code and its tests. Not for exploration - dispatch scout first if the file list is unknown.
-model: opus
+model: sonnet
 effort: medium
 tools: Read, Write, Edit, Glob, Grep, Bash, mcp__plugin_context-mode_context-mode__ctx_execute, mcp__plugin_context-mode_context-mode__ctx_execute_file, mcp__plugin_context-mode_context-mode__ctx_search
 disallowedTools: Agent, WebSearch, WebFetch
@@ -57,8 +57,9 @@ it makes a running task indistinguishable from one that never began.
 
 ## Output contract
 
-Max 25 lines and 250 words, whichever you reach first. No preamble, no code in
-the report - the code is in the files.
+When reporting, use at most 27 lines and 250 words, whichever limit arrives
+first, and put the result directly in the fields below while keeping code in
+the files.
 
 ```
 STATUS: done|blocked
@@ -68,4 +69,6 @@ LIBRARY: <INDEX.md entry used, or "-">
 TESTS: <what you added and how to run them, or "-">
 DEVIATIONS: <where you departed from the dispatch and why, or "-">
 BLOCKED_ON: <only if status is blocked>
+TRIED: <one sentence: what this attempt did>
+FAILED_BECAUSE: <one sentence, or "-" when nothing failed>
 ```
