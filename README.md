@@ -4,6 +4,14 @@ A context-isolated agent team for Claude Code. Each agent runs in its own
 context window and returns a distilled report, so research and implementation
 never fill the main session.
 
+## Amaç
+
+Bu sistemin ana amacı: ajanlar bir yandan çalışırken, orkestra şefine (ana
+oturuma) birkaç soru sorabilmesi. Ajan tıkanınca işi durdurup sana dönmez,
+ilerlerken sorusunu iletir, orkestra şefi cevaplar veya bir varsayımla devam
+eder. Böylece hiçbir ajan senin cevabını bekleyerek boşta kalmaz, iş akışı
+kesintisiz sürer.
+
 > **Dikkat: ajan görevleri ve model ataması 100$'lık (Max) plana göre
 > tasarlanmıştır.** 20$'lık (Pro) planda kullanıyorsanız `planner` ve
 > `reviewer`'ı Opus olarak bırakmayın, tüm ajanları Sonnet'e çekin. Her alt
@@ -16,7 +24,7 @@ never fill the main session.
 
 | Agent | Model / effort | Writes? | Use for |
 |-------|----------------|---------|---------|
-| `planner` | opus / high | no | Breaking a goal into parallel-safe task packets |
+| `planner` | opus / high | yes (plan file only) | Breaking a goal into parallel-safe task packets |
 | `scout` | sonnet / medium | no | "Where is X, how is Y done here" |
 | `web-scout` | sonnet / medium | no | Library docs, versions, external APIs |
 | `obsidian` | sonnet / low | no | The user's own notes, on explicit request only |
@@ -136,6 +144,22 @@ index before writing anything and copies a matching entry into the project.
 
 It starts empty. Add entries as patterns prove themselves; see the
 instructions inside `library/INDEX.md`.
+
+## Orkestra şefini uzun süre aktif kullanıyorsanız: context bütçesi
+
+Orkestra şefi neredeyse bir döngü (loop) gibi çalışır: ajan dispatch eder,
+sonucu okur, bir sonrakini dispatch eder, tekrar tekrar. Context window her
+turda tamamen yeniden gönderilir, yani dolan bir oturumda her yeni satır
+(bir ajan raporu, orkestra şefinin kendi yazdığı chat metni, bir soru cevabı)
+o ana kadar biriken her şeyle birlikte tekrar faturalanır. Context 300-350k
+tokenı geçtiğinde aynı işin maliyeti kayda değer şekilde artar; hiç iş
+yapılmasa, sadece soru sorulup cevaplansa bile.
+
+Öneri: context ~300-350k'ya yaklaştığında, o anki durumu kısa bir "handoff"
+dosyasına yazın (ne tamamlandı, ne sürüyor, sıradaki adım) ve yeni bir
+orkestra şefi oturumu başlatıp bu dosyayı ona okutup devam ettirin. Devam eden
+oturumu `--resume` ile büyütmek çok daha pahalıdır; handoff + yeni oturumun
+ilk turu bunun yanında ucuzdur.
 
 ## How progress is tracked
 
