@@ -10,7 +10,9 @@ file. Nothing else in `library/` should ever be read speculatively.
 
 | Entry | Stack | Solves | File |
 |-------|-------|--------|------|
-| _(empty)_ | | | |
+| Flutter rules | Flutter | knowing which concrete situation calls for which widget, API or guard, so a rule can be turned into a lint rule, a gate, or a CLAUDE.md line | `flutter/rules.md` |
+| Web rules | HTML/CSS/JS | knowing which concrete situation calls for which element, API, header or guard in a no framework browser app | `web/rules.md` |
+| Web ESLint config | HTML/CSS/JS | starting flat config that mechanically enforces the lint rows of `web/rules.md`, with eslint as the only dev dependency | `web/eslint.config.mjs` |
 
 ## How to add an entry
 

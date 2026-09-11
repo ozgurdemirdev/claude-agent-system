@@ -46,7 +46,36 @@ Set up this project's `CLAUDE.md` so every agent inherits its conventions.
      Ask them in one message, not one at a time. `$ARGUMENTS`, if present, is
      my hint about the stack; use it and ask only what it leaves open.
 
-4. **Write `CLAUDE.md`** in the project root, following the template's
+4. **Pull the stack's rules from the library.** Read
+   `$AGENT_KIT_ROOT/library/INDEX.md` and look for a rules entry whose stack
+   matches what step 3 established. If there is one, open only that file.
+   If there is none, say so in the report and continue without inventing a
+   list; a missing stack is a gap to fill later, deliberately, not something
+   to improvise per project.
+
+   A rules file is a source, not something to copy wholesale. Split it by
+   its own `Enforce` column, because each carrier costs differently:
+
+   - `lint` rows: the library ships the matching config next to the rules
+     file (for example `web/eslint.config.mjs`). Copy that config into the
+     project and add the run command to `CLAUDE.md`. These rows must NOT be
+     repeated as prose in `CLAUDE.md`: the analyzer already decides them on
+     every save, and a duplicated rule is paid for on every dispatch of
+     every agent forever while changing nothing.
+   - `packet` rows: they belong to the planner's acceptance template, not
+     to `CLAUDE.md`. List them under a short "Acceptance defaults" heading
+     so the planner can lift them, worded exactly as in the library,
+     condition first.
+   - `gate` rows: name them in one line each under "Gates to add", with no
+     detail. They are hook work, tracked separately.
+   - `review` rows: leave them out entirely. They reach a reviewer by
+     design and cost context everywhere else.
+
+   Where a library row contradicts what `scout` found in the existing code,
+   the existing code wins and the difference is reported, not silently
+   reconciled.
+
+5. **Write `CLAUDE.md`** in the project root, following the template's
    sections. Rules for the content:
    - State what is true, not what would be nice. If a convention is not
      established, write `None` rather than inventing one.
@@ -58,5 +87,6 @@ Set up this project's `CLAUDE.md` so every agent inherits its conventions.
    - Record anything that should override an agent's own defaults, such as
      "no test runner in this project - do not add one".
 
-5. **Report** in at most 6 lines: what was written, and which sections you
-   could not determine and left as `None`.
+6. **Report** in at most 6 lines: what was written, which sections you could
+   not determine and left as `None`, whether the library had an entry for
+   this stack, and which lint config was installed.
